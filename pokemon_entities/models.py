@@ -2,21 +2,21 @@ from django.db import models # noqa F401
 from datetime import datetime
 
 class Pokemon(models.Model):
-    title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="images")
+    title = models.CharField(max_length=200, verbose_name="Название")
+    image = models.ImageField(upload_to="images", verbose_name="Картинка")
 
     def __str__(self):
         return self.title
 
 
 class PokemonEntity(models.Model):
-    latitude = models.FloatField(max_length=100)
-    longitude = models.FloatField(max_length=100)
-    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE)
-    appeared_at = models.DateTimeField(default=datetime.now())
-    disappeared_at = models.DateTimeField(default=datetime.now())
-    level = models.IntegerField(blank=True, default=None)
-    health = models.IntegerField(blank=True, default=None)
-    strength = models.IntegerField(blank=True, default=None)
-    defence = models.IntegerField(blank=True, default=None)
-    stamina = models.IntegerField(blank=True, default=None)
+    latitude = models.FloatField(max_length=100, verbose_name="Широта")
+    longitude = models.FloatField(max_length=100, verbose_name="Долгота")
+    pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, verbose_name="Покемон")
+    appeared_at = models.DateTimeField(default=datetime.now(), verbose_name="Появляется")
+    disappeared_at = models.DateTimeField(default=datetime.now(), verbose_name="Исчезает")
+    level = models.IntegerField(blank=True, default=None, verbose_name="Уровень")
+    health = models.IntegerField(blank=True, default=None, verbose_name="Здоровье")
+    strength = models.IntegerField(blank=True, default=None, verbose_name="Сила")
+    defence = models.IntegerField(blank=True, default=None, verbose_name="Защита")
+    stamina = models.IntegerField(blank=True, default=None, verbose_name="Выносливость")
