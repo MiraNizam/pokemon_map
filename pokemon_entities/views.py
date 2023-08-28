@@ -78,6 +78,8 @@ def show_pokemon(request, pokemon_id):
             'img_url': pokemon_image_url,
             'title_ru': pokemon_name.title,
             'description': pokemon_name.description,
+            'title_en': pokemon_name.title_en,
+            'title_jp': pokemon_name.title_jp,
         }
     except ObjectDoesNotExist:
         print("Такого покемона не существует")

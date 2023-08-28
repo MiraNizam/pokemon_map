@@ -1,8 +1,11 @@
 from django.db import models # noqa F401
 from datetime import datetime
 
+
 class Pokemon(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")
+    title_en = models.CharField(max_length=200, verbose_name="Название на английском", blank=True)
+    title_jp = models.CharField(max_length=200, verbose_name="Название на японском", blank=True)
     image = models.ImageField(upload_to="images", verbose_name="Картинка")
     description = models.TextField(blank=True)
 
