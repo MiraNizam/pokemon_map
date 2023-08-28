@@ -60,29 +60,27 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    pokemon_name = Pokemon.objects.get(id=pokemon_id)
-    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime(), disappeared_at__gt=localtime(), pokemon=pokemon_name)
-
-    for pokemon in pokemon_entities:
-        add_pokemon(
-            folium_map,
-            pokemon.latitude,
-            pokemon.longitude,
-            request.build_absolute_uri(pokemon.pokemon.image.url)
-        )
-
     try:
-        pokemon = Pokemon.objects.get(id=pokemon_id)
-        pokemon_on_page = []
-        pokemon_image_url = pokemon.image.url
-        pokemon_on_page.append({
-            'pokemon_id': pokemon.id,
+        pokemon_name = Pokemon.objects.get(id=pokemon_id)
+        pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime(), disappeared_at__gt=localtime(), pokemon=pokemon_name)
+
+        for pokemon in pokemon_entities:
+            add_pokemon(
+                folium_map,
+                pokemon.latitude,
+                pokemon.longitude,
+                request.build_absolute_uri(pokemon.pokemon.image.url)
+            )
+
+        pokemon_image_url = pokemon_name.image.url
+        pokemon = {
+            'pokemon_id': pokemon_name.id,
             'img_url': pokemon_image_url,
-            'title_ru': pokemon.title,
-        })
+            'title_ru': pokemon_name.title,
+        }
     except ObjectDoesNotExist:
         print("Такого покемона не существует")
     except MultipleObjectsReturned:
         print("Найдено более одного покемона")
 
-    return render(request, 'pokemon.html', context={'map': folium_map._repr_html_(), 'pokemon': pokemon_on_page})
+    return render(request, 'pokemon.html', context={'map': folium_map._repr_html_(), 'pokemon': pokemon})
