@@ -80,10 +80,20 @@ def show_pokemon(request, pokemon_id):
             'description': pokemon_name.description,
             'title_en': pokemon_name.title_en,
             'title_jp': pokemon_name.title_jp,
+            'previous_evolution': pokemon_name.previous_evolution,
+        }
+        previous_evolution = {
+            'title_ru': pokemon_name.title,
+            'pokemon_id': pokemon_name.id,
+            'img_url': pokemon_image_url,
         }
     except ObjectDoesNotExist:
         print("Такого покемона не существует")
     except MultipleObjectsReturned:
         print("Найдено более одного покемона")
 
-    return render(request, 'pokemon.html', context={'map': folium_map._repr_html_(), 'pokemon': pokemon})
+    return render(
+        request,
+        'pokemon.html',
+        context={'map': folium_map._repr_html_(), 'pokemon': pokemon, 'previous_evolution': previous_evolution}
+    )

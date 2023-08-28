@@ -31,10 +31,10 @@
               {% if pokemon.previous_evolution %}
                 <div class="col-5 clearfix p-2 m-2">
                   <div class="img-thumbnail">
-                    <a href="{% url 'pokemon' pokemon.previous_evolution.pokemon_id %}">
+                    <a href="{% url 'pokemon' pokemon.previous_evolution.id %}">
                       <div class="d-flex justify-content-center">
-                        <img class="pull-left mr-2 float-left" src="{{pokemon.previous_evolution.img_url}}" style="height:50px; width:50px">
-                        <p class="align-middle m-0" style="line-height:50px; font-size: 20px;">{{pokemon.previous_evolution.title_ru}}</p>
+                        <img class="pull-left mr-2 float-left" src="{{previous_evolution.img_url}}" style="height:50px; width:50px">
+                        <p class="align-middle m-0" style="line-height:50px; font-size: 20px;">{{previous_evolution.title_ru}}</p>
                       </div>
                     </a>
                   </div>
@@ -73,7 +73,7 @@
     </div>
 
 
-    <h1 class="mt-5 mb-2">Карта {{pokemon.title}} в Москве</h1>
+    <h1 class="mt-5 mb-2">Карта {{pokemon.title_ru}} в Москве</h1>
     <div class="mb-5">
       {{map|safe}}  
     </div>
