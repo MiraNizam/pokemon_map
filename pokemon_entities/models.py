@@ -4,6 +4,7 @@ from datetime import datetime
 class Pokemon(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название")
     image = models.ImageField(upload_to="images", verbose_name="Картинка")
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
