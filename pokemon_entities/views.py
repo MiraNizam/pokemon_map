@@ -82,11 +82,15 @@ def show_pokemon(request, pokemon_id):
             'title_jp': pokemon_name.title_jp,
             'previous_evolution': pokemon_name.previous_evolution,
         }
-        previous_evolution = {
-            'title_ru': pokemon_name.title,
-            'pokemon_id': pokemon_name.id,
-            'img_url': pokemon_image_url,
-        }
+        if pokemon_name.previous_evolution:
+            previous_evolution = {
+                'title_ru': pokemon_name.previous_evolution.title,
+                'pokemon_id': pokemon_name.previous_evolution.id,
+                'img_url': pokemon_name.previous_evolution.image.url,
+            }
+        else:
+            previous_evolution = None
+
     except ObjectDoesNotExist:
         print("Такого покемона не существует")
     except MultipleObjectsReturned:
