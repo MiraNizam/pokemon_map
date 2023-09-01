@@ -72,24 +72,24 @@ def show_pokemon(request, pokemon_id):
                 request.build_absolute_uri(pokemon.pokemon.image.url)
             )
 
-        pokemon_image_url = pokemon_name.image.url
         pokemon = {
             'pokemon_id': pokemon_name.id,
-            'img_url': pokemon_image_url,
+            'img_url': pokemon_name.image.url,
             'title_ru': pokemon_name.title,
             'description': pokemon_name.description,
             'title_en': pokemon_name.title_en,
             'title_jp': pokemon_name.title_jp,
-            'previous_evolution': pokemon_name.previous_evolution,
         }
         if pokemon_name.previous_evolution:
-            previous_evolution = {
-                'title_ru': pokemon_name.previous_evolution.title,
-                'pokemon_id': pokemon_name.previous_evolution.id,
-                'img_url': pokemon_name.previous_evolution.image.url,
-            }
+            pokemon['previous_evolution'] = pokemon_name.previous_evolution
         else:
-            previous_evolution = None
+            pokemon['previous_evolution'] = None
+
+        if pokemon_name.next_evolutions.all():
+            next_evolution = pokemon_name.next_evolutions.all()[0]
+            pokemon['next_evolution'] = next_evolution
+        else:
+            pokemon['next_evolution'] = None
 
     except ObjectDoesNotExist:
         print("Такого покемона не существует")
@@ -99,5 +99,4 @@ def show_pokemon(request, pokemon_id):
     return render(
         request,
         'pokemon.html',
-        context={'map': folium_map._repr_html_(), 'pokemon': pokemon, 'previous_evolution': previous_evolution}
-    )
+        context={'map': folium_map._repr_html_(), 'pokemon': pokemon})
