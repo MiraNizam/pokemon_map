@@ -92,7 +92,7 @@ def show_pokemon(request, pokemon_id):
         pokemon_description['previous_evolution'] = None
 
     if pokemon.next_evolutions.all():
-        next_evolution = pokemon.next_evolutions.all()[0]
+        next_evolution = pokemon.next_evolutions.first()
         pokemon_description['next_evolution'] = next_evolution
     else:
         pokemon_description['next_evolution'] = None
