@@ -29,9 +29,18 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     ).add_to(folium_map)
 
 
+def check_image(pokemon):
+    """The function receives QuerySet object and check the image, it there is not image it put Default meaning."""
+    pokemon_image_url = DEFAULT_IMAGE_URL
+    if pokemon.image:
+        pokemon_image_url = pokemon.image.url
+    return pokemon_image_url
+
+
 def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime(), disappeared_at__gt=localtime())
+    localtime_now = localtime()
+    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime_now, disappeared_at__gt=localtime_now)
     for pokemon in pokemon_entities:
         add_pokemon(
             folium_map,
@@ -43,9 +52,7 @@ def show_all_pokemons(request):
     pokemons = Pokemon.objects.all()
     pokemons_on_page = []
     for pokemon in pokemons:
-        pokemon_image_url = None
-        if pokemon.image:
-            pokemon_image_url = pokemon.image.url
+        pokemon_image_url = check_image(pokemon)
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
             'img_url': pokemon_image_url,
