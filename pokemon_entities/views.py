@@ -6,7 +6,7 @@ from django.shortcuts import render
 from .models import Pokemon, PokemonEntity
 from django.utils.timezone import localtime
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-
+from django.shortcuts import get_object_or_404
 
 MOSCOW_CENTER = [55.751244, 37.618423]
 DEFAULT_IMAGE_URL = (
@@ -67,41 +67,35 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
-    try:
-        pokemon_name = Pokemon.objects.get(id=pokemon_id)
-        pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime(), disappeared_at__gt=localtime(), pokemon=pokemon_name)
+    pokemon_name = get_object_or_404(Pokemon, id=pokemon_id)
+    pokemon_entities = PokemonEntity.objects.filter(appeared_at__lt=localtime(), disappeared_at__gt=localtime(), pokemon=pokemon_name)
 
-        for pokemon in pokemon_entities:
-            add_pokemon(
-                folium_map,
-                pokemon.latitude,
-                pokemon.longitude,
-                request.build_absolute_uri(pokemon.pokemon.image.url)
-            )
+    for pokemon in pokemon_entities:
+        add_pokemon(
+            folium_map,
+            pokemon.latitude,
+            pokemon.longitude,
+            request.build_absolute_uri(pokemon.pokemon.image.url)
+        )
 
-        pokemon = {
-            'pokemon_id': pokemon_name.id,
-            'img_url': pokemon_name.image.url,
-            'title_ru': pokemon_name.title,
-            'description': pokemon_name.description,
-            'title_en': pokemon_name.title_en,
-            'title_jp': pokemon_name.title_jp,
-        }
-        if pokemon_name.previous_evolution:
-            pokemon['previous_evolution'] = pokemon_name.previous_evolution
-        else:
-            pokemon['previous_evolution'] = None
+    pokemon = {
+        'pokemon_id': pokemon_name.id,
+        'img_url': pokemon_name.image.url,
+        'title_ru': pokemon_name.title,
+        'description': pokemon_name.description,
+        'title_en': pokemon_name.title_en,
+        'title_jp': pokemon_name.title_jp,
+    }
+    if pokemon_name.previous_evolution:
+        pokemon['previous_evolution'] = pokemon_name.previous_evolution
+    else:
+        pokemon['previous_evolution'] = None
 
-        if pokemon_name.next_evolutions.all():
-            next_evolution = pokemon_name.next_evolutions.all()[0]
-            pokemon['next_evolution'] = next_evolution
-        else:
-            pokemon['next_evolution'] = None
-
-    except ObjectDoesNotExist:
-        print("Такого покемона не существует")
-    except MultipleObjectsReturned:
-        print("Найдено более одного покемона")
+    if pokemon_name.next_evolutions.all():
+        next_evolution = pokemon_name.next_evolutions.all()[0]
+        pokemon['next_evolution'] = next_evolution
+    else:
+        pokemon['next_evolution'] = None
 
     return render(
         request,
