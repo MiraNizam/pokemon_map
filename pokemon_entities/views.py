@@ -87,16 +87,24 @@ def show_pokemon(request, pokemon_id):
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
     }
+    pokemon_description['previous_evolution'] = None
     if pokemon.previous_evolution:
         pokemon_description['previous_evolution'] = pokemon.previous_evolution
-    else:
-        pokemon_description['previous_evolution'] = None
 
-    next_evolution = pokemon.next_evolutions.first()
-    if next_evolution:
-        pokemon_description['next_evolution'] = next_evolution
-    else:
-        pokemon_description['next_evolution'] = None
+    pokemon_description['next_evolution'] = None
+    if pokemon.next_evolutions.first():
+        pokemon_description['next_evolution'] = pokemon.next_evolutions.first()
+
+    # if pokemon.previous_evolution:
+    #     pokemon_description['previous_evolution'] = pokemon.previous_evolution
+    # else:
+    #     pokemon_description['previous_evolution'] = None
+    #
+    # if pokemon.next_evolutions.all():
+    #     next_evolution = pokemon.next_evolutions.first()
+    #     pokemon_description['next_evolution'] = next_evolution
+    # else:
+    #     pokemon_description['next_evolution'] = None
 
     return render(
         request,
