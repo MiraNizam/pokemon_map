@@ -46,7 +46,7 @@ def show_all_pokemons(request):
             folium_map,
             pokemon.latitude,
             pokemon.longitude,
-            request.build_absolute_uri(pokemon.pokemon.image.url)
+            request.build_absolute_uri(check_image(pokemon.pokemon))
         )
 
     pokemons = Pokemon.objects.all()
@@ -76,12 +76,12 @@ def show_pokemon(request, pokemon_id):
             folium_map,
             pokemon_entity.latitude,
             pokemon_entity.longitude,
-            request.build_absolute_uri(pokemon_entity.pokemon.image.url)
+            request.build_absolute_uri(check_image(pokemon_entity.pokemon))
         )
 
     pokemon_description = {
         'pokemon_id': pokemon.id,
-        'img_url': pokemon.image.url,
+        'img_url': check_image(pokemon),
         'title_ru': pokemon.title,
         'description': pokemon.description,
         'title_en': pokemon.title_en,
@@ -94,17 +94,6 @@ def show_pokemon(request, pokemon_id):
     pokemon_description['next_evolution'] = None
     if pokemon.next_evolutions.first():
         pokemon_description['next_evolution'] = pokemon.next_evolutions.first()
-
-    # if pokemon.previous_evolution:
-    #     pokemon_description['previous_evolution'] = pokemon.previous_evolution
-    # else:
-    #     pokemon_description['previous_evolution'] = None
-    #
-    # if pokemon.next_evolutions.all():
-    #     next_evolution = pokemon.next_evolutions.first()
-    #     pokemon_description['next_evolution'] = next_evolution
-    # else:
-    #     pokemon_description['next_evolution'] = None
 
     return render(
         request,
